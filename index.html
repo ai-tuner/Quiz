@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Attune Quiz Video Creator</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&family=Courier+Prime&display=swap');
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: #0f172a;
+            color: white;
+            overflow-x: hidden;
+        }
+
+        .typewriter {
+            font-family: 'Courier Prime', monospace;
+            min-height: 1.5em;
+        }
+
+        .fixed-footer {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 50px;
+            background: #1e293b;
+            border-top: 2px solid #334155;
+            z-index: 50;
+        }
+
+        .fixed-footer button {
+            min-width: 80px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        @media (min-width: 1024px) {
+            .fixed-footer button {
+                min-width: 120px;
+            }
+        }
+
+        .section-box {
+            border-radius: 12px;
+            background: rgba(30, 41, 59, 0.7);
+            border: 1px solid #475569;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .option-btn {
+            background: #334155;
+            transition: 0.2s;
+            cursor: pointer;
+            width: 100%;
+            text-align: left;
+            padding: 1rem;
+            border-radius: 0.5rem;
+        }
+
+        .option-btn:hover {
+            background: #4f46e5;
+        }
+
+        .correct {
+            background: #22c55e !important;
+            border: 2px solid white;
+        }
+
+        .wrong {
+            background: #ef4444 !important;
+            opacity: 0.8;
+        }
+
+        .hidden-section {
+            display: none !important;
+        }
+
+        #ticker-num {
+            color: #fbbf24;
+        }
+
+        @keyframes pulse-glow {
+            0% {
+                transform: scale(1);
+                box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.7);
+            }
+
+            70% {
+                transform: scale(1.05);
+                box-shadow: 0 0 0 15px rgba(34, 197, 94, 0);
+            }
+
+            100% {
+                transform: scale(1);
+                box-shadow: 0 0 0 0 rgba(34, 197, 94, 0);
+            }
+        }
+
+        .pulse-correct {
+            animation: pulse-glow 2s infinite;
+            z-index: 10;
+            border: 2px solid white !important;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div id="setup-page" class="flex flex-col items-center justify-center min-h-screen p-6">
+        <h1 class="text-4xl font-bold mb-8 text-indigo-400">Attune Video Creator</h1>
+        <div id="topic-list" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
+    </div>
+
+    <div id="quiz-page" class="hidden flex flex-col min-h-screen pb-24">
+        <!-- <div class="absolute top-4 left-4 z-[60] pointer-events-none opacity-20">
+            <img src="attune-logo.png" alt="Attune Logo" class="h-8 lg:h-8 w-auto">
+        </div> -->
+        <header class="bg-indigo-900/50 border-b border-indigo-500/30 py-3 px-6 mb-4">
+            <div class="max-w-7xl mx-auto flex justify-between items-center">
+                <div class="flex items-center gap-3">
+                    <span
+                        class="bg-indigo-500 text-white text-[10px] lg:text-xs font-bold px-2 py-1 rounded uppercase tracking-widest">Topic</span>
+                    <h2 id="current-topic-title" class="text-lg lg:text-2xl font-bold text-white tracking-tight">---
+                    </h2>
+                </div>
+                <div id="question-counter" class="text-indigo-300 font-mono text-xs lg:text-sm">Q: 0/0</div>
+            </div>
+        </header>
+
+        <main class="flex-grow p-6 max-w-7xl mx-auto w-full relative">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 items-start">
+                <div class="space-y-4">
+                    <section id="question-section" class="section-box min-h-[100px] flex flex-col justify-center">
+                        <div id="question-media" class="mb-4 text-center"></div>
+                        <div id="question-text" class="typewriter text-2xl font-semibold"></div>
+                    </section>
+                    <section id="options-section" class="section-box flex flex-col gap-4 hidden-section"></section>
+                </div>
+
+                <div class="lg:sticky lg:top-6">
+                    <section id="explanation-section"
+                        class="section-box min-h-[80px] lg:min-h-[100px] flex flex-col justify-center items-center relative">
+                        
+                        <div id="ticker-container"
+                            class="flex flex-col items-center justify-center py-2 lg:py-4 w-full">
+                            <h3 class="text-indigo-300 uppercase tracking-widest text-[10px] lg:text-sm mb-1">Time Taken
+                            </h3>
+                            <div class="relative w-20 h-20 lg:w-32 lg:h-32 mb-1">
+                                <svg class="w-full h-full" viewBox="0 0 100 100">
+                                    <circle cx="50" cy="50" r="45" fill="none" stroke="#334155" stroke-width="6" />
+                                    <circle id="ticker-circle" cx="50" cy="50" r="45" fill="none" stroke="#fbbf24"
+                                        stroke-width="6" stroke-dasharray="283" stroke-dashoffset="0"
+                                        stroke-linecap="round" style="transition: stroke-dashoffset 1s linear;" />
+                                </svg>
+                                <span id="ticker-num"
+                                    class="absolute inset-0 flex items-center justify-center font-bold text-xl lg:text-3xl">0</span>
+                            </div>
+                        </div>
+                        <div id="explanation-content" class="hidden w-full">
+                            <h3
+                                class="text-green-400 uppercase tracking-widest text-xs lg:text-sm mb-2 text-center font-bold">
+                                Explanation</h3>
+                            <div id="explanation-media" class="mb-2 lg:mb-4 text-center"></div>
+                            <div id="explanation-text"
+                                class="typewriter text-sm lg:text-lg text-indigo-100 leading-relaxed px-2"></div>
+                        </div>
+                    </section>
+                </div>
+            </div>
+
+            <div id="score-screen"
+                class="hidden absolute inset-0 z-40 bg-slate-900/95 flex flex-col items-center justify-center p-6 text-center">
+                <div class="bg-indigo-900/40 border border-indigo-500/50 p-10 rounded-3xl shadow-2xl max-w-md w-full">
+                    <h2 class="text-3xl font-bold text-indigo-400 mb-2">Quiz Complete!</h2>
+                    <p class="text-slate-400 mb-6 uppercase tracking-widest text-sm">Your Performance</p>
+                    <div class="flex items-center justify-center gap-4 mb-8">
+                        <div class="text-6xl font-black text-white" id="final-score-num">0</div>
+                        <div class="text-2xl text-slate-500 font-bold">/ <span id="final-total-num">0</span></div>
+                    </div>
+                    <div id="score-message" class="text-lg font-semibold text-indigo-200 mb-8">Great job!</div>
+                    <button onclick="resetFullQuiz()"
+                        class="bg-indigo-600 hover:bg-indigo-500 text-white px-8 py-3 rounded-xl font-bold transition w-full">Take
+                        Another Quiz</button>
+                </div>
+            </div>
+        </main>
+
+        <footer class="fixed-footer flex items-center justify-center gap-2 lg:gap-6 px-4">
+            <button onclick="prevQuestion()"
+                class="bg-slate-700 hover:bg-slate-600 px-4 py-2 rounded-lg text-xs lg:text-base font-bold transition">PREV</button>
+            <button id="hint-btn" onclick="showExplanation()"
+                class="bg-amber-500 hover:bg-amber-400 px-6 py-2 lg:px-10 rounded-lg text-xs lg:text-base font-bold text-slate-900 shadow-lg transition">HINT</button>
+            <button onclick="nextQuestion()"
+                class="bg-slate-700 hover:bg-slate-600 px-4 py-2 rounded-lg text-xs lg:text-base font-bold transition">NEXT</button>
+            <button id="export-btn" onclick="toggleRecording()"
+                class="bg-red-600 hover:bg-red-500 px-4 py-2 rounded-full text-[10px] lg:text-xs font-bold uppercase transition">REC</button>
+        </footer>
+    </div>
+
+    <script>
+        const config = {
+            typingSpeed: 40,
+            optionGap: 800,
+            initialGap: 1500,
+            sounds: {
+                typing: "https://www.soundjay.com/communication/typewriter-key-1.mp3",
+                ticker: "https://www.soundjay.com/button/beep-07.mp3",
+                correct: "https://www.soundjay.com/button/button-3.mp3",
+                wrong: "https://www.soundjay.com/button/beep-10.mp3"
+            }
+        };
+
+        let allQuizData = [];
+        let activeQuizSet = [];
+        let currentIndex = 0;
+        let tickerInterval;
+        let currentTypewriterId = 0;
+        let isRecording = false;
+        let mediaRecorder;
+        let recordedChunks = [];
+        let userSelections = [];
+
+        async function init() {
+            try {
+                const response = await fetch('quiz.json');
+                if (!response.ok) throw new Error("Could not find quiz.json");
+                allQuizData = await response.json();
+                const topics = [...new Set(allQuizData.map(q => q.topic))];
+                const list = document.getElementById('topic-list');
+                list.innerHTML = "";
+                topics.forEach(t => {
+                    const btn = document.createElement('button');
+                    btn.className = "bg-indigo-600 hover:bg-indigo-500 px-8 py-4 rounded-xl text-xl font-semibold transition";
+                    btn.innerText = t;
+                    btn.onclick = () => startQuiz(t);
+                    list.appendChild(btn);
+                });
+            } catch (err) {
+                console.error("Init error:", err);
+                document.getElementById('topic-list').innerHTML = `<p class="text-red-400">Error: Run Python script to generate quiz.json!</p>`;
+            }
+        }
+
+        function startQuiz(topic) {
+            activeQuizSet = allQuizData.filter(q => q.topic === topic);
+            currentIndex = 0;
+            userSelections = new Array(activeQuizSet.length).fill(null);
+            document.getElementById('current-topic-title').innerText = topic;
+            document.getElementById('setup-page').classList.add('hidden');
+            document.getElementById('quiz-page').classList.remove('hidden');
+            loadQuestion(0);
+        }
+
+        async function typeWriter(element, text, audioUrl, taskId) {
+            element.innerHTML = "";
+            const audio = new Audio(audioUrl);
+            for (let i = 0; i < text.length; i++) {
+                if (taskId !== currentTypewriterId) return;
+                if (text[i] === '<') {
+                    let tag = text.substring(i, text.indexOf('>', i) + 1);
+                    element.innerHTML += tag;
+                    i += tag.length - 1;
+                } else {
+                    element.innerHTML += text[i];
+                    audio.currentTime = 0;
+                    audio.play().catch(() => { });
+                }
+                await new Promise(r => setTimeout(r, config.typingSpeed));
+            }
+        }
+
+        function renderMedia(containerId, mediaUrl) {
+            const container = document.getElementById(containerId);
+            container.innerHTML = "";
+            if (!mediaUrl) return;
+            if (mediaUrl.match(/\.(jpeg|jpg|gif|png|webp)$/) != null) {
+                container.innerHTML = `<img src="${mediaUrl}" class="max-h-64 mx-auto rounded-lg shadow-lg border-2 border-indigo-500">`;
+            } else if (mediaUrl.match(/\.(mp4|webm|ogg)$/) != null) {
+                container.innerHTML = `<video autoplay muted loop class="max-h-64 mx-auto rounded-lg shadow-lg border-2 border-indigo-500"><source src="${mediaUrl}" type="video/mp4"></video>`;
+            }
+        }
+
+        async function loadQuestion(index) {
+            currentTypewriterId++;
+            const thisTaskId = currentTypewriterId;
+            clearInterval(tickerInterval);
+            const q = activeQuizSet[index];
+            const qText = document.getElementById('question-text');
+            const optSection = document.getElementById('options-section');
+            const tickerContainer = document.getElementById('ticker-container');
+            const expContent = document.getElementById('explanation-content');
+            const prevSelection = userSelections[index];
+
+            document.getElementById('question-counter').innerText = `Q: ${index + 1} / ${activeQuizSet.length}`;
+            qText.innerHTML = "";
+            optSection.innerHTML = "";
+            optSection.className = "section-box flex flex-col gap-4 hidden-section";
+            expContent.classList.add('hidden');
+            tickerContainer.classList.remove('hidden');
+            renderMedia('question-media', q.questionMedia);
+
+            if (prevSelection !== null || prevSelection === -1) {
+                qText.innerHTML = q.question;
+                optSection.classList.remove('hidden-section');
+                q.options.forEach((opt, i) => {
+                    const btn = document.createElement('button');
+                    btn.className = "option-btn";
+                    btn.innerHTML = opt;
+                    if (i === q.answer) btn.classList.add('correct', 'pulse-correct');
+                    if (i === prevSelection && i !== q.answer) btn.classList.add('wrong');
+                    btn.onclick = () => checkAnswer(i, q.answer, btn);
+                    optSection.appendChild(btn);
+                });
+                tickerContainer.classList.add('hidden');
+                expContent.classList.remove('hidden');
+                renderMedia('explanation-media', q.explanationMedia);
+                document.getElementById('explanation-text').innerHTML = q.explanation;
+            } else {
+                await typeWriter(qText, q.question, config.sounds.typing, thisTaskId);
+                if (q.options && q.options.length > 0) {
+                    await new Promise(r => setTimeout(r, config.initialGap));
+                    if (thisTaskId !== currentTypewriterId) return;
+                    optSection.classList.remove('hidden-section');
+                    for (let i = 0; i < q.options.length; i++) {
+                        if (thisTaskId !== currentTypewriterId) break;
+                        const btn = document.createElement('button');
+                        btn.className = "option-btn";
+                        btn.onclick = () => checkAnswer(i, q.answer, btn);
+                        optSection.appendChild(btn);
+                        await typeWriter(btn, q.options[i], config.sounds.typing, thisTaskId);
+                        await new Promise(r => setTimeout(r, config.optionGap));
+                    }
+                }
+                if (thisTaskId === currentTypewriterId) startTicker();
+            }
+        }
+
+        function startTicker() {
+            const tickerNum = document.getElementById('ticker-num');
+            const tickerCircle = document.getElementById('ticker-circle');
+            const audio = new Audio(config.sounds.ticker);
+            let count = 0;
+            tickerInterval = setInterval(() => {
+                count++;
+                tickerNum.innerText = count;
+                tickerCircle.style.strokeDashoffset = (count / 15) * 283;
+                audio.currentTime = 0;
+                audio.play().catch(() => { });
+            }, 1000);
+        }
+
+        function checkAnswer(selected, correct, btn) {
+            if (userSelections[currentIndex] === correct) return;
+            clearInterval(tickerInterval);
+            userSelections[currentIndex] = selected;
+            if (selected === correct) {
+                new Audio(config.sounds.correct).play();
+                btn.classList.add('correct', 'pulse-correct');
+                showExplanation();
+            } else {
+                new Audio(config.sounds.wrong).play();
+                btn.classList.add('wrong');
+            }
+        }
+
+        async function showExplanation() {
+            if (userSelections[currentIndex] === null) userSelections[currentIndex] = -1;
+            currentTypewriterId++;
+            const thisTaskId = currentTypewriterId;
+            clearInterval(tickerInterval);
+            document.getElementById('ticker-container').classList.add('hidden');
+            const expContent = document.getElementById('explanation-content');
+            const expText = document.getElementById('explanation-text');
+            const q = activeQuizSet[currentIndex];
+            renderMedia('explanation-media', q.explanationMedia);
+            const options = document.querySelectorAll('.option-btn');
+            if (options[q.answer]) options[q.answer].classList.add('correct', 'pulse-correct');
+            expContent.classList.remove('hidden');
+            if (expText.innerHTML === "") {
+                new Audio("https://www.soundjay.com/button/button-09.mp3").play().catch(() => { });
+                await typeWriter(expText, q.explanation, config.sounds.typing, thisTaskId);
+            } else {
+                expText.innerHTML = q.explanation;
+            }
+        }
+
+        function nextQuestion() {
+            if (currentIndex < activeQuizSet.length - 1) {
+                currentIndex++;
+                loadQuestion(currentIndex);
+            } else {
+                showFinalScore();
+            }
+        }
+
+        function prevQuestion() {
+            if (currentIndex > 0) {
+                currentIndex--;
+                loadQuestion(currentIndex);
+            }
+        }
+
+        function showFinalScore() {
+            const total = activeQuizSet.length;
+            const correctCount = userSelections.reduce((count, sel, idx) => (sel === activeQuizSet[idx].answer ? count + 1 : count), 0);
+            document.getElementById('final-score-num').innerText = correctCount;
+            document.getElementById('final-total-num').innerText = total;
+            const msg = document.getElementById('score-message');
+            const perc = (correctCount / total) * 100;
+            msg.innerText = perc === 100 ? "Perfect Score! 🏆" : perc >= 70 ? "Excellent Work! 🌟" : "Keep Practicing! 📚";
+            document.getElementById('score-screen').classList.remove('hidden');
+            new Audio("https://www.soundjay.com/misc/sounds/bell-ringing-05.mp3").play().catch(() => { });
+        }
+
+        function resetFullQuiz() {
+            userSelections = [];
+            currentIndex = 0;
+            document.getElementById('score-screen').classList.add('hidden');
+            document.getElementById('quiz-page').classList.add('hidden');
+            document.getElementById('setup-page').classList.remove('hidden');
+            init();
+        }
+
+        async function toggleRecording() {
+            if (!isRecording) {
+                try {
+                    const stream = await navigator.mediaDevices.getDisplayMedia({ video: true, audio: true });
+                    mediaRecorder = new MediaRecorder(stream);
+                    recordedChunks = [];
+                    mediaRecorder.ondataavailable = e => recordedChunks.push(e.data);
+                    mediaRecorder.onstop = () => {
+                        const blob = new Blob(recordedChunks, { type: 'video/webm' });
+                        const url = URL.createObjectURL(blob);
+                        const a = document.createElement('a');
+                        a.href = url; a.download = 'attune-quiz.webm'; a.click();
+                    };
+                    mediaRecorder.start();
+                    isRecording = true;
+                    document.getElementById('export-btn').innerText = "STOP";
+                } catch (e) { }
+            } else {
+                mediaRecorder.stop();
+                isRecording = false;
+                document.getElementById('export-btn').innerText = "REC";
+            }
+        }
+
+        window.addEventListener('keydown', (e) => {
+            if (document.getElementById('quiz-page').classList.contains('hidden')) return;
+            switch (e.key) {
+                case 'ArrowRight': case ' ': e.preventDefault(); nextQuestion(); break;
+                case 'ArrowLeft': prevQuestion(); break;
+                case 'h': case 'H': showExplanation(); break;
+                case 'r': case 'R': toggleRecording(); break;
+            }
+        });
+
+        window.onload = init;
+    </script>
+</body>
+
+</html>

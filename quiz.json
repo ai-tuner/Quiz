@@ -1,0 +1,42 @@
+[
+  {
+    "id": 1,
+    "topic": "General Science",
+    "question": "Which planet is known as the <b>Red Planet</b>?",
+    "questionMedia": "https://upload.wikimedia.org/wikipedia/commons/0/02/OSIRIS_Mars_true_color.jpg",
+    "options": ["Earth", "Mars", "Jupiter", "Saturn"],
+    "answer": 1,
+    "explanation": "Mars appears red due to iron oxide (rust) on its surface.",
+    "explanationMedia": ""
+  },
+  {
+    "id": 2,
+    "topic": "Technology",
+    "question": "What does CPU stand for?",
+    "questionMedia": "",
+    "options": ["Central Process Unit", "Central Processing Unit", "Computer Personal Unit"],
+    "answer": 1,
+    "explanation": "The <b>CPU</b> is the primary component of a computer that acts as its \"control center.\"",
+    "explanationMedia": ""
+  },
+  {
+    "id": 3,
+    "topic": "Technology",
+    "question": "What does Processor stand for?",
+    "questionMedia": "",
+    "options": ["Central Process Unit", "Central Processing Unit", "Computer Personal Unit"],
+    "answer": 1,
+    "explanation": "The <b>CPU</b> is the primary component of a computer that acts as its \"control center.\"",
+    "explanationMedia": ""
+  },
+  {
+    "id": 3,
+    "topic": "Technology",
+    "question": "What does Processor stand for?",
+    "questionMedia": "",
+    "options": ["Central Process Unit", "Central Processing Unit", "Computer Personal Unit"],
+    "answer": 1,
+    "explanation": "The <b>CPU</b> is the primary component of a computer that acts as its \"control center.\"",
+    "explanationMedia": "https://upload.wikimedia.org/wikipedia/commons/0/02/OSIRIS_Mars_true_color.jpg"
+  }
+]
