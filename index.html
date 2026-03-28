@@ -39,7 +39,7 @@
             align-items: center;
         }
 
-        @media (min-width: 600px) {
+        @media (min-width: 1024px) {
             .fixed-footer button {
                 min-width: 120px;
             }
@@ -113,7 +113,7 @@
 <body>
 
     <div id="setup-page" class="flex flex-col items-center justify-center min-h-screen p-6">
-        <h1 class="text-4xl font-bold mb-8 text-indigo-400">Attune Video Creator</h1>
+        <h1 class="text-4xl font-bold mb-8 text-indigo-400">Select a Topic</h1>
         <div id="topic-list" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
     </div>
 
@@ -134,7 +134,7 @@
         </header>
 
         <main class="flex-grow p-6 max-w-7xl mx-auto w-full relative">
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 items-start">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 items-start">
                 <div class="space-y-4">
                     <section id="question-section" class="section-box min-h-[100px] flex flex-col justify-center">
                         <div id="question-media" class="mb-4 text-center"></div>
@@ -143,32 +143,27 @@
                     <section id="options-section" class="section-box flex flex-col gap-4 hidden-section"></section>
                 </div>
 
-                <div class="lg:sticky lg:top-6">
+                <div class="md:sticky md:top-6">
                     <section id="explanation-section"
-                        class="section-box min-h-[80px] lg:min-h-[100px] flex flex-col justify-center items-center relative">
-                        
+                        class="section-box min-h-[80px] md:min-h-[100px] flex flex-col justify-center items-center relative">
+
                         <div id="ticker-container"
-                            class="flex flex-col items-center justify-center py-2 lg:py-4 w-full">
-                            <h3 class="text-indigo-300 uppercase tracking-widest text-[10px] lg:text-sm mb-1">Time Taken
+                            class="flex flex-col items-center justify-center py-2 md:py-4 w-full">
+                            <h3 class="text-indigo-300 uppercase tracking-widest text-[10px] md:text-sm mb-1">Time Taken
                             </h3>
-                            <div class="relative w-20 h-20 lg:w-32 lg:h-32 mb-1">
-                                <svg class="w-full h-full" viewBox="0 0 100 100">
-                                    <circle cx="50" cy="50" r="45" fill="none" stroke="#334155" stroke-width="6" />
-                                    <circle id="ticker-circle" cx="50" cy="50" r="45" fill="none" stroke="#fbbf24"
-                                        stroke-width="6" stroke-dasharray="283" stroke-dashoffset="0"
-                                        stroke-linecap="round" style="transition: stroke-dashoffset 1s linear;" />
-                                </svg>
+
+                            <div class="relative w-20 h-10 md:w-32 md:h-32 mb-1">
                                 <span id="ticker-num"
-                                    class="absolute inset-0 flex items-center justify-center font-bold text-xl lg:text-3xl">0</span>
+                                    class="absolute inset-0 flex items-center justify-center font-bold text-xl md:text-3xl">0</span>
                             </div>
                         </div>
                         <div id="explanation-content" class="hidden w-full">
                             <h3
-                                class="text-green-400 uppercase tracking-widest text-xs lg:text-sm mb-2 text-center font-bold">
+                                class="text-green-400 uppercase tracking-widest text-xs lg:text-base mb-2 text-center font-bold">
                                 Explanation</h3>
                             <div id="explanation-media" class="mb-2 lg:mb-4 text-center"></div>
                             <div id="explanation-text"
-                                class="typewriter text-sm lg:text-lg text-indigo-100 leading-relaxed px-2"></div>
+                                class="typewriter text-base md:text-xl lg:text-xl text-indigo-100 leading-relaxed px-2">
                         </div>
                     </section>
                 </div>
@@ -209,10 +204,10 @@
             optionGap: 800,
             initialGap: 1500,
             sounds: {
-                typing: "https://www.soundjay.com/communication/typewriter-key-1.mp3",
-                ticker: "https://www.soundjay.com/button/beep-07.mp3",
-                correct: "https://www.soundjay.com/button/button-3.mp3",
-                wrong: "https://www.soundjay.com/button/beep-10.mp3"
+                typing: "typewriter-key-1.mp3",
+                ticker: "beep-ticker.mp3",
+                correct: "button-3.mp3",
+                wrong: "beep-10.mp3"
             }
         };
 
